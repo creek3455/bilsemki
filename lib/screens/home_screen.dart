@@ -5,6 +5,7 @@ import 'package:bilsemki/services/api_service.dart';
 import 'package:bilsemki/screens/profile_screen.dart';
 import 'package:bilsemki/screens/category_detail_screen.dart';
 import 'package:bilsemki/widgets/update_dialog.dart';
+import 'package:bilsemki/config.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -157,23 +158,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                         : const Icon(Icons.update),
-                    label: const Text('Güncelle'),
+                    label: const Text('Soruları Güncelle'),
                   ),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: _isUpdating ? null : _downloadTestData,
-                    icon: _isUpdating
-                        ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                        : const Icon(Icons.download),
-                    label: const Text('Test Verisi'),
+                
+                // Test Verisi düğmesi sadece demo modunda görünür
+                if (Config.isDemoMode) ...[  
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: _isUpdating ? null : _downloadTestData,
+                      icon: _isUpdating
+                          ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                          : const Icon(Icons.download),
+                      label: const Text('Test Verisi'),
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),

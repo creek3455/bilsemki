@@ -76,8 +76,7 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
               ),
 
               // Seviyeler
-              Expanded(
-                child: ListView.builder(
+              Expanded(child: ListView.builder(
                   itemCount: 10, // Toplam 10 seviye
                   itemBuilder: (context, index) {
                     final level = index + 1;
@@ -86,7 +85,8 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                       level: level,
                       isLocked: isLocked,
                       currentXP: xp,
-                      requiredXP: Config.xpForLevelUp, // Config'ten al
+                      requiredXP: Config.getXpRequiredForLevel(level), // Dinamik XP hesaplama
+                      currentLevel: currentLevel, // Mevcut seviye bilgisi
                       onTap: isLocked
                           ? null
                           : () {
@@ -117,6 +117,7 @@ class LevelCard extends StatelessWidget {
   final bool isLocked;
   final int currentXP;
   final int requiredXP;
+  final int currentLevel;
   final VoidCallback? onTap;
 
   const LevelCard({
@@ -124,6 +125,7 @@ class LevelCard extends StatelessWidget {
     required this.isLocked,
     required this.currentXP,
     required this.requiredXP,
+    required this.currentLevel,
     this.onTap,
     super.key,
   });
@@ -139,7 +141,9 @@ class LevelCard extends StatelessWidget {
         title: Text('Seviye $level'),
         subtitle: isLocked
             ? const Text('Kilitli')
-            : Text('$currentXP / $requiredXP XP'),
+            : level < currentLevel
+                ? const Text('Tamamlandı') // Geçilmiş seviye için sadece "Tamamlandı" göster
+                : Text('$currentXP / $requiredXP XP'), // Mevcut seviye için XP göster
         trailing: isLocked ? null : const Icon(Icons.play_arrow),
         onTap: onTap,
       ),

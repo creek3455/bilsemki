@@ -174,7 +174,7 @@ class _CorrectAnswerDialog extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           const Text(
-            'Doğru! ✅',
+            'Doğru!',
             style: TextStyle(
               color: Colors.green,
               fontSize: 24,
@@ -212,7 +212,7 @@ class _WrongAnswerDialog extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           const Text(
-            'Yanlış! ❌',
+            'Yanlış!',
             style: TextStyle(
               color: Colors.red,
               fontSize: 24,

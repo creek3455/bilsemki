@@ -118,41 +118,62 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     if (progress != null) {
       final completed = List<int>.from(progress.completedQuestions);
       completed.addAll(answeredQuestions);
-
-      final newLevel = score >= Config.xpForLevelUp ? progress.level + 1 : progress.level;
+      
+      // Mevcut seviye için gereken XP miktarını hesapla
+      final requiredXp = Config.getXpRequiredForLevel(progress.level);
       final newXp = progress.xp + score;
+      
+      // Yeni XP, gereken XP'den fazla ise seviye atla
+      final levelUp = newXp >= requiredXp;
+      final newLevel = levelUp ? progress.level + 1 : progress.level;
+      
+      // Seviye atlandığında XP sıfırlanır, atlanmadığında mevcut XP korunur
+      final updatedXp = levelUp ? 0 : newXp;
 
       await dbService.updateUserProgress(
         UserProgress(
           id: progress.id,
           categoryId: widget.categoryId,
           level: newLevel,
-          xp: newXp,
+          xp: updatedXp,
           completedQuestions: completed,
           lastPlayed: DateTime.now().millisecondsSinceEpoch,
         ),
       );
     } else {
-      final newLevel = score >= Config.xpForLevelUp ? widget.level + 1 : widget.level;
+      // Mevcut seviye için gereken XP miktarını hesapla
+      final requiredXp = Config.getXpRequiredForLevel(widget.level);
       final newXp = score;
+      
+      // Yeni XP, gereken XP'den fazla ise seviye atla
+      final levelUp = newXp >= requiredXp;
+      final newLevel = levelUp ? widget.level + 1 : widget.level;
+      
+      // Seviye atlandığında XP sıfırlanır, atlanmadığında mevcut XP korunur
+      final updatedXp = levelUp ? 0 : newXp;
 
       await dbService.insertUserProgress(
         UserProgress(
           categoryId: widget.categoryId,
           level: newLevel,
-          xp: newXp,
+          xp: updatedXp,
           completedQuestions: answeredQuestions,
           lastPlayed: DateTime.now().millisecondsSinceEpoch,
         ),
       );
     }
 
+    // Mevcut seviye için gereken XP miktarını hesapla
+    final requiredXp = Config.getXpRequiredForLevel(widget.level);
+    final levelUp = score >= requiredXp;
+    
     // QuizResultScreen'e geçiş öncesi değerleri yazdır
     print('DEBUG: QuizResultScreen\'e gönderilen değerler:');
     print('  score: $score');
     print('  totalQuestions: ${Config.questionsPerLevel}');
-    print('  levelUp: ${score >= Config.xpForLevelUp}');
-    print('  newLevel: ${score >= Config.xpForLevelUp ? widget.level + 1 : widget.level}');
+    print('  levelUp: $levelUp');
+    print('  newLevel: ${levelUp ? widget.level + 1 : widget.level}');
+    print('  requiredXp: $requiredXp');
 
     Navigator.pushReplacement(
       context,
@@ -160,8 +181,8 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         builder: (context) => QuizResultScreen(
           score: score,
           totalQuestions: Config.questionsPerLevel,
-          levelUp: score >= Config.xpForLevelUp,
-          newLevel: score >= Config.xpForLevelUp ? widget.level + 1 : widget.level,
+          levelUp: levelUp,
+          newLevel: levelUp ? widget.level + 1 : widget.level,
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:bilsemki/models/category.dart';
 import 'package:bilsemki/models/user_progress.dart';
 import 'package:bilsemki/services/database_service.dart';
 import 'package:bilsemki/utils/simple_recovery_code.dart';
+import 'package:bilsemki/config.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -64,6 +65,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Kapat'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Test amaçlı tüm ilerlemeyi sıfırlama fonksiyonu
+  void _resetAllProgress() async {
+    final dbService = DatabaseService();
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('İlerlemeyi Sıfırla'),
+        content: const Text('Tüm ilerlemeniz sıfırlanacak. Bu işlem geri alınamaz. Devam etmek istiyor musunuz?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('İptal'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await dbService.resetAllProgress();
+              Navigator.pop(context);
+              setState(() {
+                _progressData = _loadProgressData();
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Tüm ilerleme sıfırlandı')),
+              );
+            },
+            child: const Text('Sıfırla'),
           ),
         ],
       ),
@@ -154,14 +187,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: Column(
         children: [
-          // Test butonu (sadece geliştirme aşamasında)
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: _addTestData,
-              child: const Text('Test Verisi Ekle'),
+          // Test butonları (sadece demo modunda görünür)
+          if (Config.isDemoMode) ...[  
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: _addTestData,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                    child: const Text('Test Verisi Ekle'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _resetAllProgress,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    child: const Text('İlerlemeyi Sıfırla'),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
 
           // Kurtarma kodu butonları
           Padding(

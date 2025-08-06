@@ -25,7 +25,9 @@ class DatabaseService {
     final path = join(documentsDirectory.path, Config.databaseName);
 
     // Bu satırı ekleyin (sadece test için)
-    await deleteDatabase(path);
+    if (Config.isDemoMode){
+      await deleteDatabase(path);
+    }
 
     return await openDatabase(
       path,
@@ -93,6 +95,13 @@ class DatabaseService {
 
     await batch.commit();
     print('DEBUG: Kategoriler güncellendi');
+  }
+  
+  // Tüm kullanıcı ilerlemesini sıfırla (sadece demo modunda kullanılabilir)
+  Future<void> resetAllProgress() async {
+    final db = await database;
+    await db.delete('user_progress');
+    print('DEBUG: Tüm kullanıcı ilerlemesi sıfırlandı');
   }
 
 
