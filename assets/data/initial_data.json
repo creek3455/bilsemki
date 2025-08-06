@@ -1,0 +1,59 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Matematik",
+      "description": "Temel matematik işlemleri",
+      "icon": "assets/icons/math.png",
+      "order_index": 1
+    },
+    {
+      "id": 2,
+      "name": "Fen Bilgisi",
+      "description": "Doğa bilimleri",
+      "icon": "assets/icons/science.png",
+      "order_index": 2
+    },
+    {
+      "id": 3,
+      "name": "Tarih",
+      "description": "Genel tarih bilgisi",
+      "icon": "assets/icons/history.png",
+      "order_index": 3
+    }
+  ],
+  "questions": [
+    {
+      "id": 1,
+      "category_id": 1,
+      "question": "3 x 4 + 2 = ?",
+      "options": ["12", "14", "16", "18"],
+      "correct_option": 2,
+      "difficulty": 1
+    },
+    {
+      "id": 2,
+      "category_id": 1,
+      "question": "Karekök(64) = ?",
+      "options": ["6", "7", "8", "9"],
+      "correct_option": 3,
+      "difficulty": 2
+    },
+    {
+      "id": 3,
+      "category_id": 2,
+      "question": "Suyun kimyasal formülü nedir?",
+      "options": ["H2O", "CO2", "O2", "NaCl"],
+      "correct_option": 1,
+      "difficulty": 1
+    },
+    {
+      "id": 4,
+      "category_id": 3,
+      "question": "Türkiye Cumhuriyeti ne zaman kurulmuştur?",
+      "options": ["1919", "1920", "1923", "1924"],
+      "correct_option": 3,
+      "difficulty": 1
+    }
+  ]
+}
