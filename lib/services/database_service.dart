@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -27,6 +28,9 @@ class DatabaseService {
     // Bu satırı ekleyin (sadece test için)
     if (Config.isDemoMode){
       await deleteDatabase(path);
+      var prefs = await SharedPreferences.getInstance();
+      // prefs.getInt('questions_version') ?? 1;
+      await prefs.setInt('questions_version', 1);
     }
 
     return await openDatabase(
